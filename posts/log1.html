@@ -3,112 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- CHANGE THIS: your post title -->
-  <title>Post Title — yourname</title>
+  <title>Paper Notes: Attention Is All You Need — karthik-unni</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
 
   <nav>
-    <div class="prompt">cd ~/writing</div>
+    <div class="prompt">cat posts/paper-attention-is-all-you-need.txt</div>
     <div class="nav-line">
-      <span class="nav-host">yourname@github.io</span>
+      <span class="nav-host">karthik-unni@github.io</span>
       <a href="../index.html">← home</a>
-      <a href="../index.html#blog">all posts</a>
+      <a href="../blog.html">← all posts</a>
     </div>
   </nav>
 
   <article>
     <div class="post-header">
-
-      <!-- CHANGE THIS: breadcrumb category -->
       <div class="post-breadcrumb">
         <a href="../index.html">home</a> /
-        <a href="../index.html#blog">writing</a> /
-        <span class="post-cat cat-mentorship">mentorship</span>
-        <!-- category options: cat-mentorship · cat-research · cat-project · cat-log -->
+        <a href="../blog.html">writing</a> /
+        <span class="post-cat cat-research">research</span>
       </div>
-
-      <!-- CHANGE THIS: your post title -->
-      <h1>What I learned in month one at Magma</h1>
-
-      <!-- CHANGE THIS: date and read time -->
+      <h1>Paper Notes: Attention Is All You Need</h1>
       <div class="post-info">
-        <span>January 2025</span>
+        <span>April 2025</span>
         <span>·</span>
-        <span>5 min read</span>
+        <span>Karthik Unnikrishnan</span>
+        <span>·</span>
+        <span>~8 min read</span>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         YOUR POST CONTENT GOES BELOW THIS LINE
-         ════════════════════════════════════════ -->
     <div class="post-body">
 
       <p>
-        Start with the most important thing — what is this post about and why did you write it?
-        One or two sentences. Don't overthink it.
+        This is the paper that introduced the Transformer — the architecture that now sits underneath
+        GPT, BERT, Gemini, and basically every large model you've heard of. I read it as part of
+        trying to properly understand why modern AI works the way it does, not just use it.
+        These are my notes — written to make sense to me, so probably written plainly.
       </p>
 
-      <h2>## background</h2>
-      <p>
-        What context does the reader need? Where were you before this? What problem were you trying to solve?
+      <p style="color:var(--dim); font-size:12.5px;">
+        Paper: <a href="https://arxiv.org/abs/1706.03762" target="_blank">Vaswani et al., 2017 — arxiv.org/abs/1706.03762</a>
       </p>
 
-      <h2>## what I learned</h2>
+      <h2>## background — what existed before this</h2>
       <p>
-        The actual content. Write like you're explaining it to a friend. Use simple language.
-        If you're summarizing a paper, describe the core idea in your own words.
+        Before Transformers, sequence tasks (translation, text generation, etc.) were handled by
+        RNNs and LSTMs. These process tokens one at a time, left to right. That sounds fine until
+        you realise the problem: to understand word 50 in a sentence, the model has to pass
+        information through words 1 through 49 in sequence. By the time it gets there, a lot
+        of that early context has faded — this is the "vanishing gradient" problem.
+      </p>
+      <p>
+        Attention mechanisms were already being bolted onto RNNs to help with this — letting
+        the model look back at earlier tokens directly. The insight of this paper was:
+        <em>what if we throw away the RNN entirely and just use attention?</em>
       </p>
 
-      <h3>### key idea 1</h3>
+      <h2>## the core idea — self-attention</h2>
       <p>
-        Explain it. If there's code, show it:
+        The key mechanism is <strong>self-attention</strong>. For every token in a sequence,
+        the model asks: "which other tokens in this sequence should I pay attention to when
+        computing my representation?" And it asks this for every token simultaneously, in parallel.
       </p>
-      <pre><code># example code block
-def something():
-    return "your code here"</code></pre>
-
-      <h3>### key idea 2</h3>
       <p>
-        Another concept. Use lists if it helps:
+        Here's how it actually works. Each token gets turned into three vectors:
       </p>
       <ul>
-        <li>thing one</li>
-        <li>thing two — <code>inline code looks like this</code></li>
-        <li>thing three</li>
+        <li><code>Q</code> — Query: "what am I looking for?"</li>
+        <li><code>K</code> — Key: "what do I contain?"</li>
+        <li><code>V</code> — Value: "what do I actually pass forward?"</li>
       </ul>
-
-      <h2>## what I built</h2>
       <p>
-        Did you build something from this? Describe it. Link to the GitHub repo if it's public.
-        Even a small experiment counts.
+        To compute attention, you take the dot product of a Query with all the Keys,
+        scale it, run a softmax to get weights, then take a weighted sum of the Values.
+        In one formula:
+      </p>
+      <pre><code>Attention(Q, K, V) = softmax( QK^T / sqrt(d_k) ) * V</code></pre>
+      <p>
+        The <code>sqrt(d_k)</code> scaling stops the dot products from getting too large
+        and pushing the softmax into regions with tiny gradients. Small detail, but it matters.
+      </p>
+
+      <h3>### why this is powerful</h3>
+      <p>
+        In an RNN, the distance between two tokens matters — information has to travel through
+        every token in between. In self-attention, every token attends to every other token
+        directly. The distance is always 1. A word at position 1 and a word at position 200
+        can directly influence each other.
+      </p>
+
+      <h3>### multi-head attention</h3>
+      <p>
+        Instead of doing attention once, the paper runs it <em>h</em> times in parallel with
+        different learned Q/K/V projections. Each "head" can learn to attend to different kinds
+        of relationships — one head might track syntactic dependencies, another might track
+        coreference, etc. The outputs of all heads are concatenated and projected back down.
+      </p>
+      <pre><code>MultiHead(Q, K, V) = Concat(head_1, ..., head_h) * W_O
+where head_i = Attention(Q*W_Qi, K*W_Ki, V*W_Vi)</code></pre>
+
+      <h2>## the full architecture</h2>
+      <p>
+        The Transformer is an encoder-decoder architecture. For translation: the encoder reads
+        the source sentence, the decoder generates the target sentence one token at a time.
+      </p>
+      <ul>
+        <li><strong>Encoder:</strong> stack of 6 identical layers, each with multi-head self-attention + feed-forward network + residual connections + layer norm</li>
+        <li><strong>Decoder:</strong> same stack but with an extra cross-attention layer that attends to the encoder output, and masked self-attention so it can't look ahead</li>
+      </ul>
+      <p>
+        The masking in the decoder is important — during training the full target sequence is fed in,
+        but each position can only see positions before it. Otherwise the model would just copy the answer.
+      </p>
+
+      <h3>### positional encoding</h3>
+      <p>
+        Self-attention has no concept of order — it just looks at a bag of tokens and attends between them.
+        To give the model a sense of position, the paper adds a positional encoding to each token embedding
+        before feeding it in. They use sine and cosine functions at different frequencies:
+      </p>
+      <pre><code>PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
+PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))</code></pre>
+      <p>
+        The reason for this specific formula: the model can learn to attend to relative positions,
+        because <code>PE(pos+k)</code> can be expressed as a linear function of <code>PE(pos)</code>.
+        Later work (RoPE, ALiBi) improved on this, but for 2017 it was elegant.
+      </p>
+
+      <h2>## what I built to understand it</h2>
+      <p>
+        Reading the math is one thing. To actually get it I implemented a minimal self-attention
+        layer in Python — no PyTorch abstractions, just numpy:
+      </p>
+      <pre><code>import numpy as np
+
+def self_attention(X, W_Q, W_K, W_V):
+    Q = X @ W_Q
+    K = X @ W_K
+    V = X @ W_V
+
+    d_k = Q.shape[-1]
+    scores = Q @ K.T / np.sqrt(d_k)
+    weights = np.exp(scores) / np.exp(scores).sum(axis=-1, keepdims=True)  # softmax
+    return weights @ V</code></pre>
+      <p>
+        Running this on toy sentences and printing the attention weights made the whole
+        thing click. You can literally see which tokens are attending to which.
       </p>
 
       <h2>## what surprised me</h2>
       <p>
-        The part you didn't expect. The thing that clicked. The thing that's still confusing.
-        This is often the most useful section for people reading later.
+        How much of the architecture is just engineering decisions layered on top of one core idea.
+        The core idea — replace recurrence with attention — is one paragraph. Everything else
+        (multi-head, scaling, positional encoding, residuals, layer norm, the feed-forward sublayers)
+        is making that one idea stable and trainable at scale.
+      </p>
+      <p>
+        Also how readable the paper actually is. I was expecting dense math. It's surprisingly
+        well-written — the authors clearly wanted people to understand it.
       </p>
 
       <blockquote>
-        Optional: a quote or insight worth calling out on its own.
+        "We propose a new simple network architecture, the Transformer, based solely on
+        attention mechanisms, dispensing with recurrence and convolutions entirely."
+        — the abstract. They were not understating it.
       </blockquote>
+
+      <h2>## questions I still have</h2>
+      <ul>
+        <li>The feed-forward sublayer inside each encoder/decoder block — why exactly is it needed? What does it do that attention doesn't?</li>
+        <li>How does multi-head attention actually specialise in practice — can you visualise what each head learns?</li>
+        <li>The paper trains on WMT translation datasets. How much of the architecture choices are specific to translation vs general sequence tasks?</li>
+      </ul>
 
       <h2>## what's next</h2>
       <p>
-        What are you going to do with this? What do you want to learn next?
-        What questions does this open up?
+        Reading BERT next — which takes the encoder half of this architecture and pre-trains it
+        with masked language modelling. Want to understand what "bidirectional" actually means
+        in practice vs the causal masking used here.
+      </p>
+      <p>
+        Also want to implement a full tiny Transformer for character-level language modelling —
+        something you can train on a laptop and actually watch learn.
       </p>
 
     </div>
-    <!-- ════════════════════════════════════════
-         END OF POST CONTENT
-         ════════════════════════════════════════ -->
 
     <div class="post-nav">
-      <a href="../index.html#blog">← all posts</a>
-      <span style="color:var(--dim); font-size:12px">yourname · 2025</span>
+      <a href="../blog.html">← all posts</a>
+      <span style="color:var(--dim); font-size:12px">karthik unnikrishnan · 2025</span>
     </div>
   </article>
 
