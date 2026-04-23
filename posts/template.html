@@ -3,112 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- CHANGE THIS: your post title -->
-  <title>Post Title — yourname</title>
+  <!-- ① CHANGE: post title -->
+  <title>Post Title — karthik-unni</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
 
   <nav>
-    <div class="prompt">cd ~/writing</div>
+    <div class="prompt">cat posts/your-post.txt</div>
     <div class="nav-line">
-      <span class="nav-host">yourname@github.io</span>
+      <span class="nav-host">karthik-unni@github.io</span>
       <a href="../index.html">← home</a>
-      <a href="../index.html#blog">all posts</a>
+      <a href="../blog.html">← all posts</a>
     </div>
   </nav>
 
   <article>
     <div class="post-header">
-
-      <!-- CHANGE THIS: breadcrumb category -->
       <div class="post-breadcrumb">
         <a href="../index.html">home</a> /
-        <a href="../index.html#blog">writing</a> /
+        <a href="../blog.html">writing</a> /
+        <!-- ② CHANGE: pick one category class below, delete the others -->
         <span class="post-cat cat-mentorship">mentorship</span>
-        <!-- category options: cat-mentorship · cat-research · cat-project · cat-log -->
+        <!-- <span class="post-cat cat-research">research</span>   -->
+        <!-- <span class="post-cat cat-project">project</span>     -->
+        <!-- <span class="post-cat cat-log">log</span>             -->
       </div>
 
-      <!-- CHANGE THIS: your post title -->
-      <h1>What I learned in month one at Magma</h1>
+      <!-- ③ CHANGE: your post title -->
+      <h1>Post Title Here</h1>
 
-      <!-- CHANGE THIS: date and read time -->
+      <!-- ④ CHANGE: date and read time -->
       <div class="post-info">
-        <span>January 2025</span>
+        <span>Month YYYY</span>
         <span>·</span>
-        <span>5 min read</span>
+        <span>Karthik Unnikrishnan</span>
+        <span>·</span>
+        <span>X min read</span>
       </div>
     </div>
 
-    <!-- ════════════════════════════════════════
-         YOUR POST CONTENT GOES BELOW THIS LINE
-         ════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════
+         ⑤ WRITE YOUR POST BELOW THIS LINE
+         ═══════════════════════════════════ -->
     <div class="post-body">
 
-      <p>
-        Start with the most important thing — what is this post about and why did you write it?
-        One or two sentences. Don't overthink it.
-      </p>
+      <p>Opening paragraph — what is this post about and why did you write it?</p>
 
-      <h2>## background</h2>
-      <p>
-        What context does the reader need? Where were you before this? What problem were you trying to solve?
-      </p>
+      <h2>## section title</h2>
+      <p>Your content here.</p>
 
-      <h2>## what I learned</h2>
-      <p>
-        The actual content. Write like you're explaining it to a friend. Use simple language.
-        If you're summarizing a paper, describe the core idea in your own words.
-      </p>
+      <h3>### sub-section</h3>
+      <p>More content. Inline <code>code looks like this</code>.</p>
 
-      <h3>### key idea 1</h3>
-      <p>
-        Explain it. If there's code, show it:
-      </p>
-      <pre><code># example code block
-def something():
-    return "your code here"</code></pre>
+      <pre><code># code block example
+def hello():
+    print("hello world")</code></pre>
 
-      <h3>### key idea 2</h3>
-      <p>
-        Another concept. Use lists if it helps:
-      </p>
       <ul>
-        <li>thing one</li>
-        <li>thing two — <code>inline code looks like this</code></li>
-        <li>thing three</li>
+        <li>bullet one</li>
+        <li>bullet two</li>
+        <li>bullet three</li>
       </ul>
 
-      <h2>## what I built</h2>
-      <p>
-        Did you build something from this? Describe it. Link to the GitHub repo if it's public.
-        Even a small experiment counts.
-      </p>
-
-      <h2>## what surprised me</h2>
-      <p>
-        The part you didn't expect. The thing that clicked. The thing that's still confusing.
-        This is often the most useful section for people reading later.
-      </p>
-
       <blockquote>
-        Optional: a quote or insight worth calling out on its own.
+        A quote or insight worth calling out on its own.
       </blockquote>
 
+      <h2>## what surprised me</h2>
+      <p>The unexpected part. Often the most useful thing you can write.</p>
+
       <h2>## what's next</h2>
-      <p>
-        What are you going to do with this? What do you want to learn next?
-        What questions does this open up?
-      </p>
+      <p>What you're doing with this, what questions it opened up.</p>
 
     </div>
-    <!-- ════════════════════════════════════════
-         END OF POST CONTENT
-         ════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════
+         END OF POST
+         ═══════════════════════════════════ -->
 
     <div class="post-nav">
-      <a href="../index.html#blog">← all posts</a>
-      <span style="color:var(--dim); font-size:12px">yourname · 2025</span>
+      <a href="../blog.html">← all posts</a>
+      <span style="color:var(--dim)">karthik unnikrishnan · 2025</span>
     </div>
   </article>
 
