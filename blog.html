@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>writing — karthik-unni</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="prompt">ls ~/writing</div>
+    <div class="nav-line">
+      <span class="nav-host">karthik-unni@github.io</span>
+      <a href="index.html">← home</a>
+      <a href="index.html#work">work</a>
+      <a href="https://github.com/Karthik-Unni" target="_blank">github↗</a>
+    </div>
+  </nav>
+
+  <div class="blog-page-header">
+    <h1>writing<span class="cursor"></span></h1>
+    <p style="margin-top:0.6rem; font-size:13px;">
+      Notes on mentorships, research papers, projects, and learning logs.<br />
+      <span style="color:var(--dim)">Updated whenever I learn something worth sharing.</span>
+    </p>
+
+    <!-- Filter buttons — JS hides/shows by category -->
+    <div class="blog-filter">
+      <button class="filter-btn active" onclick="filter('all', this)">all</button>
+      <button class="filter-btn" onclick="filter('mentorship', this)">mentorship</button>
+      <button class="filter-btn" onclick="filter('research', this)">research</button>
+      <button class="filter-btn" onclick="filter('project', this)">project</button>
+      <button class="filter-btn" onclick="filter('log', this)">log</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       POSTS LIST
+       To add a new post:
+       1. Copy one <li> block below
+       2. Update href, title, category data-cat, date
+       3. Save this file and push to GitHub
+       ═══════════════════════════════════════════ -->
+
+  <ul class="post-list" id="post-list">
+
+    <li class="post-item" data-cat="mentorship">
+      <a href="posts/magma-experience.html" class="post-link">
+        From zero to 5G — my Magma mentorship experience
+      </a>
+      <div class="post-meta">
+        <span class="post-cat cat-mentorship">mentorship</span>
+        <span>2025</span>
+      </div>
+    </li>
+
+    <!-- TEMPLATE: copy from here ↓ -->
+    <!--
+    <li class="post-item" data-cat="mentorship">
+      <a href="posts/your-file-name.html" class="post-link">Your post title here</a>
+      <div class="post-meta">
+        <span class="post-cat cat-mentorship">mentorship</span>
+        <span>Month YYYY</span>
+      </div>
+    </li>
+
+    <li class="post-item" data-cat="research">
+      <a href="posts/paper-notes-xyz.html" class="post-link">Paper notes: Title of paper</a>
+      <div class="post-meta">
+        <span class="post-cat cat-research">research</span>
+        <span>Month YYYY</span>
+      </div>
+    </li>
+
+    <li class="post-item" data-cat="project">
+      <a href="posts/project-writeup.html" class="post-link">How I built [project name]</a>
+      <div class="post-meta">
+        <span class="post-cat cat-project">project</span>
+        <span>Month YYYY</span>
+      </div>
+    </li>
+
+    <li class="post-item" data-cat="log">
+      <a href="posts/weekly-log-1.html" class="post-link">Weekly log #1 — things I picked up</a>
+      <div class="post-meta">
+        <span class="post-cat cat-log">log</span>
+        <span>Month YYYY</span>
+      </div>
+    </li>
+    -->
+    <!-- TEMPLATE: copy to here ↑ -->
+
+  </ul>
+
+  <footer>
+    karthik unnikrishnan ·
+    <a href="https://github.com/Karthik-Unni" target="_blank">github</a> ·
+    <a href="mailto:karthikunni2111@gmail.com">email</a>
+  </footer>
+
+  <script>
+    function filter(cat, btn) {
+      // toggle active button
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // show/hide posts
+      document.querySelectorAll('.post-item').forEach(item => {
+        item.style.display =
+          (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
