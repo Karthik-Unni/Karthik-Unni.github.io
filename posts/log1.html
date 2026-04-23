@@ -132,27 +132,6 @@ PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))</code></pre>
         Later work (RoPE, ALiBi) improved on this, but for 2017 it was elegant.
       </p>
 
-      <h2>## what I built to understand it</h2>
-      <p>
-        Reading the math is one thing. To actually get it I implemented a minimal self-attention
-        layer in Python — no PyTorch abstractions, just numpy:
-      </p>
-      <pre><code>import numpy as np
-
-def self_attention(X, W_Q, W_K, W_V):
-    Q = X @ W_Q
-    K = X @ W_K
-    V = X @ W_V
-
-    d_k = Q.shape[-1]
-    scores = Q @ K.T / np.sqrt(d_k)
-    weights = np.exp(scores) / np.exp(scores).sum(axis=-1, keepdims=True)  # softmax
-    return weights @ V</code></pre>
-      <p>
-        Running this on toy sentences and printing the attention weights made the whole
-        thing click. You can literally see which tokens are attending to which.
-      </p>
-
       <h2>## what surprised me</h2>
       <p>
         How much of the architecture is just engineering decisions layered on top of one core idea.
@@ -171,24 +150,8 @@ def self_attention(X, W_Q, W_K, W_V):
         — the abstract. They were not understating it.
       </blockquote>
 
-      <h2>## questions I still have</h2>
-      <ul>
-        <li>The feed-forward sublayer inside each encoder/decoder block — why exactly is it needed? What does it do that attention doesn't?</li>
-        <li>How does multi-head attention actually specialise in practice — can you visualise what each head learns?</li>
-        <li>The paper trains on WMT translation datasets. How much of the architecture choices are specific to translation vs general sequence tasks?</li>
-      </ul>
-
-      <h2>## what's next</h2>
-      <p>
-        Reading BERT next — which takes the encoder half of this architecture and pre-trains it
-        with masked language modelling. Want to understand what "bidirectional" actually means
-        in practice vs the causal masking used here.
-      </p>
-      <p>
-        Also want to implement a full tiny Transformer for character-level language modelling —
-        something you can train on a laptop and actually watch learn.
-      </p>
-
+  
+  
     </div>
 
     <div class="post-nav">
