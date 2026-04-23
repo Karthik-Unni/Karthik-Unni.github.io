@@ -172,6 +172,7 @@ p a:hover { text-decoration: underline; }
 .entry-desc { color: var(--dim); font-size: 13px; line-height: 1.75; }
 
 /* ── BLOG LIST ── */
+
 .post-list { list-style: none; }
 .post-item {
   display: flex;
@@ -180,7 +181,7 @@ p a:hover { text-decoration: underline; }
   gap: 1rem;
   padding: 0.55rem 0;
   border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .post-item:last-child { border-bottom: none; }
 .post-link {
