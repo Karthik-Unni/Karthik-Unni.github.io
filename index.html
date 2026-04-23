@@ -3,53 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Karthik-Unni.github.io</title>
+  <title>karthik-unni.github.io</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <div class="prompt">whoami</div>
     <div class="nav-line">
-      <span class="nav-host">Karthik-Unni@github.io</span>
+      <span class="nav-host">karthik-unni@github.io</span>
       <span>~</span>
       <a href="#about">about</a>
       <a href="#work">work</a>
-      <a href="#blog">writing</a>
+      <a href="blog.html">writing</a>
       <a href="https://github.com/Karthik-Unni" target="_blank">github↗</a>
       <a href="mailto:karthikunni2111@gmail.com">email↗</a>
     </div>
   </nav>
 
-  <!-- BIO -->
+  <!-- ASCII ART + BIO -->
   <section id="about">
     <div class="prompt">cat about.txt</div>
+    <br />
+
+    <pre class="ascii-art">
+██╗  ██╗ █████╗ ██████╗ ████████╗██╗  ██╗██╗██╗  ██╗
+██║ ██╔╝██╔══██╗██╔══██╗╚══██╔══╝██║  ██║██║██║ ██╔╝
+█████╔╝ ███████║██████╔╝   ██║   ███████║██║█████╔╝
+██╔═██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║██╔═██╗
+██║  ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║██║  ██╗
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝</pre>
+
     <br />
     <h1>Hi, I'm <span class="name-hi">Karthik Unnikrishnan</span> <span class="cursor"></span></h1>
     <br />
     <p>
-      I'm a <span class="hi">machine learning enthusiast</span> and builder, based in Kerala, India.
-      I learn by doing — reading papers, shipping projects, and writing about all of it.
+      2nd year undergrad at <span class="hi">Amrita Vishwa Vidyapeetham</span>, Kerala.
+      I build AI systems, work on open-source infrastructure, and write about everything I learn.
     </p>
     <p>
-      Currently doing a mentorship at <span class="hi">Magma</span>, where I'm going deep on
-      Agentic AI framworks and Machine Learning research. Before that, <span class="muted">[past experience or study]</span>.
+      Currently a mentee at <span class="hi">Magma</span> (Linux Foundation Networking) —
+      went from zero knowledge of mobile core networks to deploying a full
+      <span class="hi">4G/5G network stack</span>, fixing a real bug across 14 files,
+      and shipping a PR to a production codebase.
     </p>
     <p>
-      This site is where I document everything — things I've built, things I've read,
-      and things I'm still figuring out. No polish, just the actual work.
+      Outside of networking I build <span class="hi">AI agents</span>, full-stack platforms,
+      and multimodal systems. <span class="muted">Exploring agentic AI frameworks and ML research.</span>
     </p>
     <div class="tags">
       <span class="tag">machine learning</span>
-      <span class="tag">deep learning</span>
+      <span class="tag">agentic ai</span>
+      <span class="tag">linux / networking</span>
       <span class="tag">python</span>
-      <span class="tag">research</span>
+      <span class="tag">open source</span>
       <span class="tag">building in public</span>
     </div>
   </section>
 
-  <!-- WORK & ACHIEVEMENTS -->
+  <!-- WORK -->
   <section id="work">
     <div class="divider"><span class="divider-label">## work &amp; achievements</span></div>
 
@@ -57,132 +69,197 @@
 
     <div class="entry">
       <div class="entry-header">
-        <span class="entry-title">AI/ML Mentorship</span>
+        <span class="entry-title">Open Source Mentee</span>
         <span class="entry-date">2024 – present</span>
       </div>
-      <div class="entry-org">Magma</div>
+      <div class="entry-org">Magma — Linux Foundation Networking Project</div>
       <div class="entry-desc">
-        Deep dive into [topic]. Working on [specific project or skill].
-        Writing about progress weekly below.
+        Deployed a 4G/5G network stack from scratch. Audited <code>lte/gateway</code> Dockerfiles,
+        found and fixed broken Ubuntu 24.04 packages (<code>python3-distutils</code>, <code>libssl1.1</code>),
+        updated <code>subscriberdb</code> to Ubuntu 24.04, and upgraded CI to a matrix strategy
+        testing ubuntu-20.04 and ubuntu-24.04. Fixed a real bug spanning 14 files and submitted
+        a PR to the production codebase.
       </div>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Next Program</span>
-        <span class="entry-date">upcoming</span>
+      <div class="tags" style="margin-top:0.6rem">
+        <span class="tag">linux</span>
+        <span class="tag">docker</span>
+        <span class="tag">open source</span>
+        <span class="tag">4g/5g</span>
+        <span class="tag">github actions</span>
       </div>
-      <div class="entry-org">coming soon</div>
-      <div class="entry-desc">Add future mentorships here as you join them.</div>
     </div>
 
     <h2 style="margin-top:2rem">projects</h2>
 
     <div class="entry">
       <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://github.com/yourusername/project-name" target="_blank">project-name ↗</a>
-        </span>
-        <span class="entry-date">month yyyy</span>
-      </div>
-      <div class="entry-desc">
-        What it does, what you used, what you learned. One or two sentences.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">python</span>
-        <span class="tag">pytorch</span>
-      </div>
-    </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">
-          <a href="https://github.com/yourusername/project-2" target="_blank">project-two ↗</a>
-        </span>
-        <span class="entry-date">month yyyy</span>
-      </div>
-      <div class="entry-desc">
-        Built during Magma mentorship. What problem it solves, what surprised you.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">ml</span>
-        <span class="tag">api</span>
-      </div>
-    </div>
-
-    <h2 style="margin-top:2rem">achievements</h2>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Selected for Magma Mentorship Cohort</span>
+        <span class="entry-title">Orbita — AI Supply Chain Platform</span>
         <span class="entry-date">2024</span>
       </div>
-      <div class="entry-desc">One line about what this was and why it matters.</div>
+      <div class="entry-desc">
+        AI-powered platform for automated communication between retailers and suppliers using agent-based workflows.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">fastapi</span><span class="tag">react</span><span class="tag">ai agents</span><span class="tag">python</span>
+      </div>
     </div>
 
     <div class="entry">
       <div class="entry-header">
-        <span class="entry-title">Add your next achievement</span>
-        <span class="entry-date">yyyy</span>
+        <span class="entry-title">CIVIA — Civic Intelligent Virtual AI Assistant</span>
+        <span class="entry-date">2024</span>
       </div>
       <div class="entry-desc">
-        Courses, hackathons, certifications, papers implemented — anything you're proud of.
+        Fully automated civic and legal service kiosk using LangChain and RAG-based vector search
+        to streamline access to government services through AI agents.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">langchain</span><span class="tag">rag</span><span class="tag">vector search</span><span class="tag">ai agents</span>
       </div>
     </div>
 
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">Morphik-LMM — Offline Multimodal AI</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-desc">
+        Offline multimodal AI system for text Q&amp;A and image-to-text with modular pipelines,
+        optimised prompts, sub-3s responses, containerised on Docker and Kubernetes.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">ollama</span><span class="tag">multimodal llms</span><span class="tag">docker</span><span class="tag">kubernetes</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">NYAYA-Setu — AI Legal Assistance</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-desc">
+        Scalable AI legal platform using LLM-powered agents to simplify access to legal information and guidance.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">fastapi</span><span class="tag">llms</span><span class="tag">ai agents</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">Gesture-Controlled Infotainment System</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-desc">
+        Low-latency infotainment interface using FastAPI and Computer Vision for touchless gesture-based control on embedded hardware.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">opencv</span><span class="tag">computer vision</span><span class="tag">fastapi</span><span class="tag">embedded</span>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">AbleLearn — AI Accessibility Platform</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-desc">
+        Inclusive educational platform for children with disabilities, with AI-powered accessibility features and adaptive learning modules.
+      </div>
+      <div class="tags" style="margin-top:0.5rem">
+        <span class="tag">python</span><span class="tag">speech-to-text</span><span class="tag">nlp</span>
+      </div>
+    </div>
+
+    <h2 style="margin-top:2rem">achievements &amp; awards</h2>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">🏆 Innovate 2.0 Hackathon — Winner</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-org">SCT College of Engineering, Thiruvananthapuram</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">🥈 InApp Epochon 2.0 — Runner Up</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-org">ACM — Amrita Vishwa Vidyapeetham, Amritapuri</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">🏆 Codex 26' Hackathon — Winner</span>
+        <span class="entry-date">2026</span>
+      </div>
+      <div class="entry-org">TKM Institute of Technology</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-header">
+        <span class="entry-title">Magma Open Source Mentee</span>
+        <span class="entry-date">2024</span>
+      </div>
+      <div class="entry-desc">
+        Selected as mentee for the Linux Foundation Networking Magma project.
+        Shipped a real PR to a production open-source codebase within weeks of joining.
+      </div>
+    </div>
+
+    <h2 style="margin-top:2rem">stack</h2>
+    <div class="tags">
+      <span class="tag">python</span>
+      <span class="tag">fastapi</span>
+      <span class="tag">django</span>
+      <span class="tag">flask</span>
+      <span class="tag">react</span>
+      <span class="tag">flutter</span>
+      <span class="tag">langchain</span>
+      <span class="tag">docker</span>
+      <span class="tag">kubernetes</span>
+      <span class="tag">linux / unix</span>
+      <span class="tag">git</span>
+      <span class="tag">rest apis</span>
+    </div>
   </section>
 
-  <!-- BLOG -->
+  <!-- LATEST WRITING (preview) -->
   <section id="blog">
     <div class="divider"><span class="divider-label">## writing</span></div>
     <p style="color:var(--dim); font-size:12.5px; margin-bottom:1.2rem">
-      Notes on mentorships, research papers, projects, and things I'm learning.
+      Notes on mentorships, papers I've read, projects I've built.
+      — <a href="blog.html">all posts →</a>
     </p>
 
     <ul class="post-list">
-
-      <!-- Copy this <li> block every time you write a new post -->
+      <!-- keep only your latest 3 posts here. Full list lives on blog.html -->
       <li class="post-item">
-        <a href="posts/magma-month-1.html" class="post-link">What I learned in month one at Magma</a>
+        <a href="posts/magma-experience.html" class="post-link">From zero to 5G — my Magma mentorship experience</a>
         <div class="post-meta">
           <span class="post-cat cat-mentorship">mentorship</span>
-          <span>Jan 2025</span>
+          <span>2025</span>
         </div>
       </li>
-
       <li class="post-item">
-        <a href="posts/paper-attention-is-all-you-need.html" class="post-link">
-          Paper notes: Attention Is All You Need
-        </a>
-        <div class="post-meta">
-          <span class="post-cat cat-research">research</span>
-          <span>Jan 2025</span>
-        </div>
-      </li>
-
-      <li class="post-item">
-        <a href="posts/project-x-writeup.html" class="post-link">How I built [project name]</a>
-        <div class="post-meta">
-          <span class="post-cat cat-project">project</span>
-          <span>Feb 2025</span>
-        </div>
-      </li>
-
-      <li class="post-item">
-        <a href="posts/weekly-log-1.html" class="post-link">Weekly log #1 — things I picked up</a>
+        <a href="posts/template.html" class="post-link">Your next post goes here</a>
         <div class="post-meta">
           <span class="post-cat cat-log">log</span>
-          <span>Feb 2025</span>
+          <span>soon</span>
         </div>
       </li>
-
     </ul>
+
+    <p style="margin-top:1.2rem">
+      <a href="blog.html" class="btn-text">→ see all writing</a>
+    </p>
   </section>
 
   <footer>
-    <span>yourname · </span>
-    <a href="https://github.com/yourusername" target="_blank">github</a> ·
-    <a href="mailto:you@email.com">email</a> ·
+    karthik unnikrishnan ·
+    <a href="https://github.com/Karthik-Unni" target="_blank">github</a> ·
+    <a href="mailto:karthikunni2111@gmail.com">email</a> ·
     built with plain html
   </footer>
 
