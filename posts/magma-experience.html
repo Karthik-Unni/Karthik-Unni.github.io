@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>From zero to 5G — karthik-unni</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="prompt">cat posts/magma-experience.txt</div>
+    <div class="nav-line">
+      <span class="nav-host">karthik-unni@github.io</span>
+      <a href="../index.html">← home</a>
+      <a href="../blog.html">← all posts</a>
+    </div>
+  </nav>
+
+  <article>
+    <div class="post-header">
+      <div class="post-breadcrumb">
+        <a href="../index.html">home</a> /
+        <a href="../blog.html">writing</a> /
+        <span class="post-cat cat-mentorship">mentorship</span>
+      </div>
+      <h1>From zero to 5G — my Magma mentorship experience</h1>
+      <div class="post-info">
+        <span>2025</span>
+        <span>·</span>
+        <span>Karthik Unnikrishnan</span>
+        <span>·</span>
+        <span>~6 min read</span>
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      <p>
+        A few weeks ago I had never touched a mobile core network.
+        I didn't know what an EPC was, what AGW stood for, or why anyone would run
+        a 4G stack on their laptop. Today I've deployed one, fixed a production bug in it,
+        and submitted a PR that's now part of the codebase. Here's how that happened.
+      </p>
+
+      <h2>## what is Magma?</h2>
+      <p>
+        <a href="https://magmacore.org" target="_blank">Magma</a> is a Linux Foundation Networking
+        project — an open-source mobile core network platform that lets you deploy 4G and 5G
+        infrastructure without expensive proprietary hardware. Think of it as the software that
+        sits between your phone and the internet when you're on a cellular network.
+      </p>
+      <p>
+        I joined as a mentee with basically zero knowledge of telecom. What followed was one of
+        the most intense technical learning experiences I've had.
+      </p>
+
+      <h2>## what I actually did</h2>
+
+      <h3>### deploying the 4G/5G stack</h3>
+      <p>
+        The first challenge was just getting the thing running. Magma's Access Gateway (AGW)
+        runs inside Docker containers, and the setup involves coordinating a lot of moving parts —
+        orchestration, subscriber databases, the gateway itself. Getting through that process
+        from scratch forced me to understand what each component actually does.
+      </p>
+
+      <h3>### finding the Ubuntu 24.04 breakage</h3>
+      <p>
+        Once the environment was running, I started auditing the Dockerfiles. The project had
+        accumulated dependencies that silently broke on newer Ubuntu. Specifically:
+      </p>
+      <ul>
+        <li><code>python3-distutils</code> — removed from Ubuntu 24.04, package installs fail quietly</li>
+        <li><code>libssl1.1</code> — not available on 24.04, replaced by <code>libssl3</code></li>
+      </ul>
+      <p>
+        These aren't the kind of errors that scream at you. You have to actually look at what
+        the Dockerfile is requesting and check whether it still exists in the target OS.
+      </p>
+
+      <h3>### the fix: 14 files, one PR</h3>
+      <p>
+        The fix wasn't just swapping package names. It involved:
+      </p>
+      <ul>
+        <li>Updating <code>subscriberdb</code> Dockerfile to use Ubuntu 24.04 as base</li>
+        <li>Replacing deprecated packages with their 24.04 equivalents</li>
+        <li>Updating the GitHub Actions CI workflow to test against a matrix of ubuntu-20.04 and ubuntu-24.04</li>
+        <li>Tracing the breakage across 14 files where assumptions about the OS were baked in</li>
+      </ul>
+      <p>
+        The CI matrix strategy means future contributors will catch OS-specific breakage before it
+        ships. That felt meaningful — not just fixing something, but making it harder to break again.
+      </p>
+
+      <h2>## what surprised me</h2>
+      <p>
+        The biggest surprise was how much of open-source maintenance is just archaeology.
+        Code accumulates assumptions — about the OS, about what packages exist, about what
+        version of Python is installed. Nobody documents these assumptions because at the time
+        they were obvious. Finding and fixing them requires reading carefully and thinking
+        about what the code <em>expects</em>, not just what it does.
+      </p>
+      <p>
+        The second surprise was how approachable it all was once I started. Telecom infrastructure
+        sounds intimidating. But it's just software, running in containers, with logs you can read.
+      </p>
+
+      <h2>## what I'm doing next</h2>
+      <p>
+        Continuing to contribute to Magma while going deeper on the ML side — agentic AI
+        frameworks, reading research papers, and building projects that connect both worlds.
+        Writing about all of it here.
+      </p>
+
+    </div>
+
+    <div class="post-nav">
+      <a href="../blog.html">← all posts</a>
+      <span style="color:var(--dim)">karthik unnikrishnan · 2025</span>
+    </div>
+  </article>
+
+</body>
+</html>
