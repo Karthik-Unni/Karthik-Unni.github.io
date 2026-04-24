@@ -39,7 +39,7 @@
       <p>
         Hackathonss......what are they..this was me when i joined college in 2024.Time passed by and i saw many people doing these so called hackthons ,winning and earning recognition
         and cash prizes.Emphasise on the Cash Prize , as a college student would look for earning moeny as a side to fulfil their wishes.And So Was I.The Story begins in the start of 
-        my 2nd year in college. Me and my friend ,in class ,sitting and dreaming ,suddenly ,coincidence or so we both had a thought like somehow wwe should do something outside college.And the 
+        my 2nd year in college. Me and my friend ,in class ,sitting and dreaming ,suddenly ,coincidence or so we both had a thought like somehow we should do something outside college.And the 
         first idea was A HACKATHON.So we found a hackthon  and registered for it,the two of us.
       </p>
 
@@ -59,39 +59,26 @@
 
       <h3>### The one that started our streak</h3>
       <p>
-        CODEX'26 (Kollam) [JAN 28-29]
+        CODEX'26 (Kollam) [JAN 28-29] .The drive we got from the previous hackthon landed us here .Our team expanded by one more member and we were 3 now. We arrived at the College
+        that was conducting the hackhton and did the orientation and stuff and then the time came to pick our problem statements.If im not wrong there were 4 ps and we choses the one with
+        more technical terms in it which we knew no one would try to take or even try to understand the ps.There began our 24 hrs. We sat planned and did out project.The discussions between
+        us were proper and effective for the projects developement and the presentatios that we did were on point.
+      </p>
+      <p>
+        We actually made a project with agentic ai frameworks whih made the supply chain between markets and warehouses more efficient.And at last as a end devvice we implemented it 
+        as a kiosk,which i think was the key factor.
+        Then came the final presentations and we were the last to present.We did our presentations hoping for the best.After all the presentations we were waiting for the results.
+        Suddenly i got a message from one of the organiser that to come near the side of the stage.From that moment my adrenaline began to rush.The award ceremony came.Prizes of third,
+        second were called.We were standing tensed there watching all these.And the moment came ,The FIRST PLACE -TEAM SYNAPZ. We were blown away.We coulndt beleive it .It was our second hackthon.
+        And we just won that and got a cash prize of 50k.We were over the moon.
+      </p>
+  
+      <p>
+       We got many appreciations and we were one of the stars of our class.We were more enthusiastic to attending more and winning.From where our next hackthon comes.
       </p>
 
-      <h3>### finding the Ubuntu 24.04 breakage</h3>
-      <p>
-        Once the environment was running, I started auditing the Dockerfiles. The project had
-        accumulated dependencies that silently broke on newer Ubuntu. Specifically:
-      </p>
-      <ul>
-        <li><code>python3-distutils</code> — removed from Ubuntu 24.04, package installs fail quietly</li>
-        <li><code>libssl1.1</code> — not available on 24.04, replaced by <code>libssl3</code></li>
-      </ul>
-      <p>
-        These aren't the kind of errors that scream at you. You have to actually look at what
-        the Dockerfile is requesting and check whether it still exists in the target OS.
-      </p>
 
-      <h3>### the fix: 14 files, one PR</h3>
-      <p>
-        The fix wasn't just swapping package names. It involved:
-      </p>
-      <ul>
-        <li>Updating <code>subscriberdb</code> Dockerfile to use Ubuntu 24.04 as base</li>
-        <li>Replacing deprecated packages with their 24.04 equivalents</li>
-        <li>Updating the GitHub Actions CI workflow to test against a matrix of ubuntu-20.04 and ubuntu-24.04</li>
-        <li>Tracing the breakage across 14 files where assumptions about the OS were baked in</li>
-      </ul>
-      <p>
-        The CI matrix strategy means future contributors will catch OS-specific breakage before it
-        ships. That felt meaningful — not just fixing something, but making it harder to break again.
-      </p>
-
-      <h2>## what surprised me</h2>
+      <h2>## Hackthon no : 3</h2>
       <p>
         The biggest surprise was how much of open-source maintenance is just archaeology.
         Code accumulates assumptions — about the OS, about what packages exist, about what
