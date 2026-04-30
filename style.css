@@ -60,7 +60,7 @@ nav {
 .nav-line {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
+  flex-wrap:nowrap;
   color: var(--dim);
   font-size: 13px;
 }
