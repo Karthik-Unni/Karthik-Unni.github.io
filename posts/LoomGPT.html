@@ -1,1 +1,217 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LOOM-GPT — Weaving Small Language Models Together — karthik-unni</title>
+
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <nav>
+    <div class="prompt">cat posts/LoomGPT.txt</div>
+
+    <div class="nav-line">
+      <span class="nav-host">karthik-unni@github.io</span>
+      <a href="../index.html">← home</a>
+      <a href="../blog.html">← all posts</a>
+    </div>
+  </nav>
+
+  <article>
+
+    <div class="post-header">
+
+      <div class="post-breadcrumb">
+        <a href="../index.html">home</a> /
+        <a href="../blog.html">writing</a> /
+        <span class="post-cat cat-project">project</span>
+      </div>
+
+      <h1>LOOM-GPT: Weaving Small Language Models Together as one GPT Felt Lonely</h1>
+
+      <div class="post-info">
+        <span>May 2026</span>
+        <span>·</span>
+        <span>Karthik Unnikrishnan</span>
+        <span>·</span>
+        <span>~6 min read</span>
+      </div>
+
+    </div>
+
+    <div class="post-body">
+
+      <p>
+        For a long time I felt like I was using language models without actually understanding them. Modern AI development makes it really easy to connect APIs, send prompts, and build something that
+        looks intelligent, but most of the interesting parts stay hidden underneath. I wanted to understand what training actually looks like, what tokenization changes, why models overfit, and whether
+        small language models could still create interesting behavior without depending on huge pretrained systems.
+      </p>
+
+      <p>
+        Instead of reading more papers or watching another explanation video, I decided to build something myself. That project eventually became <strong>LOOM-GPT</strong>.
+      </p>
+
+      <h2>## what is LOOM-GPT?</h2>
+
+      <p>
+        LOOM-GPT is a local AI experimentation framework that allows users to train small GPT-style transformer language models completely from scratch on custom datasets. Users can provide folders containing 
+        notes, text files, markdown documents, CSV datasets, JSONL files, or even source code repositories and the framework handles the preparation pipeline automatically.
+      </p>
+
+      <p>
+        The system processes datasets, tokenizes text using a byte-level tokenizer, builds training batches, tracks validation performance, stores checkpoints, and finally allows users to generate text from
+        prompts using their trained models.
+      </p>
+
+      <p>
+        The goal was never to compete with larger models or replace existing assistants. I wanted something that felt closer to a laboratory than a product — something transparent enough to learn from and flexible
+        enough to experiment with.
+      </p>
+
+      <h2>## the idea that changed the project</h2>
+
+      <p>
+        Originally LOOM was only supposed to train one small transformer.
+      </p>
+
+      <p>
+        But while building it I kept thinking about something strange.
+      </p>
+
+      <p>
+        Why train one model to understand everything when multiple smaller models could specialize independently?
+      </p>
+
+      <p>
+        Instead of forcing technical writing, poetry, philosophy, documentation, and personal notes into one training process, what if each model learned one domain properly and then collaborated during generation?
+      </p>
+
+      <p>
+        That idea became the feature that eventually defined the project.
+      </p>
+
+      <h2>## model weaving</h2>
+
+      <p>
+        Model Weaving allows multiple specialist models to generate together.
+      </p>
+
+      <p>
+        Users can train separate specialist models on different datasets and assign influence weights during generation.
+      </p>
+
+      <blockquote>
+        Poetry Specialist → 70% <br>
+        Technology Specialist → 30%
+      </blockquote>
+
+      <p>
+        During generation, each specialist predicts the next token independently. LOOM-GPT blends those predictions according to the assigned influence values and samples the final output from the combined probability distribution.
+      </p>
+
+      <p>
+        The result becomes a controllable mixture of multiple domains. Generation can shift style naturally depending on which specialist contributes more at different points in the sequence.
+      </p>
+
+      <p>
+        I liked this because generation suddenly stopped feeling like one model speaking and started feeling more like multiple systems negotiating what gets written next.
+      </p>
+
+      <h2>## seeing generation happen</h2>
+
+      <p>
+        One feature I ended up enjoying more than expected was token-level tracing.
+      </p>
+
+      <p>
+        Traditional generation pipelines usually hide decision making. You get output but not much insight into how it appeared.
+      </p>
+
+      <p>
+        LOOM records specialist influence at the token level and allows users to inspect which model contributed to each generated word.
+      </p>
+
+      <p>
+        Watching specialists dominate different parts of generation made the process feel surprisingly interpretable and much easier to study.
+      </p>
+
+      <h2>## what surprised me</h2>
+
+      <p>
+        The biggest surprise was how quickly small models expose mistakes.
+      </p>
+
+      <p>
+        Small changes in preprocessing created noticeable changes in generation quality. Repetitive datasets caused validation loss to collapse quickly and overfitting became visible almost immediately.
+      </p>
+
+      <p>
+        Another surprise was that blended outputs were often much more coherent than expected. Instead of creating noisy text, specialist mixing sometimes produced outputs with surprisingly strong style and structure.
+      </p>
+
+      <h2>## why i built this</h2>
+
+      <p>
+        LOOM-GPT exists mostly because I wanted a better way to understand transformer systems beyond simply using them.
+      </p>
+
+      <p>
+        It became a place to experiment with training, generation, architecture choices, and controllable language modeling while staying completely local.
+      </p>
+
+      <p>
+        More than anything, it became proof that small models can still be interesting if you stop treating them like miniature versions of larger systems and start letting them specialize.
+      </p>
+
+      <h2>## what's next</h2>
+
+      <p>
+        LOOM currently supports local training, specialist generation, and model weaving.
+      </p>
+
+      <p>
+        But after finishing the first version, more questions started showing up.
+      </p>
+
+      <p>
+        What happens if specialists adapt their weights dynamically?
+        What happens if weaving expands beyond text?
+        What happens if multiple devices participate in generation?
+      </p>
+
+      <p>
+        I don't have those answers yet.
+      </p>
+
+      <p>
+        But there is already another folder sitting in my workspace.
+      </p>
+
+      <blockquote>
+        loom_v2/
+      </blockquote>
+
+      <p>
+        We'll see where this goes.
+      </p>
+
+    </div>
+
+    <div class="post-nav">
+      <a href="../blog.html">← all posts</a>
+      <span style="color:var(--dim)">
+        karthik unnikrishnan · 2026
+      </span>
+    </div>
+
+  </article>
+
+</body>
+</html>
+```
 
