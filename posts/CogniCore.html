@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CogniCore — Building Brains for Characters That Aren't Real — karthik-unni</title>
+  <link rel="stylesheet" href="https://karthik-unni.github.io/style.css" />
+</head>
+<body>
+  <header>
+    <p><code>cat posts/CogniCore.txt</code></p>
+    <nav>
+      karthik-unni@github.io
+      <a href="https://karthik-unni.github.io/index.html">← home</a>
+      <a href="https://karthik-unni.github.io/blog.html">← all posts</a>
+    </nav>
+  </header>
+
+  <main>
+    <p><a href="https://karthik-unni.github.io/index.html">home</a> / <a href="https://karthik-unni.github.io/blog.html">writing</a> / project</p>
+
+    <h1>CogniCore: Building Brains for Characters That Aren't Real</h1>
+
+    <p>June 2026 · Karthik Unnikrishnan · ~7 min read</p>
+
+    <p>
+      Okay so this one started from a very specific frustration I had while playing games.
+    </p>
+
+    <p>
+      You know that moment in an RPG where you do something absolutely wild — betray an NPC, steal from them, watch them get hurt — and they just... don't react properly? Or they react, and then 10 minutes later they're back to their normal scripted dialogue like nothing happened? That bothered me way more than it should have. These characters have names, backstories, relationships — but the moment something unexpected happens, the illusion falls apart completely.
+    </p>
+
+    <p>
+      Most game characters aren't actually intelligent. They're just very well-scripted. And I kept thinking — what if they weren't?
+    </p>
+
+    <p>
+      That question became CogniCore.
+    </p>
+
+    <h2>## what even is this thing</h2>
+
+    <p>
+      CogniCore is a character intelligence framework — basically an SDK for building AI characters that actually behave like people. Not NPCs following a dialogue tree. Not a chatbot with a persona system prompt. Actual characters with memory, emotions, relationships, goals, secrets, and the ability to gossip, plan, get scared, feel guilty, and change over time.
+    </p>
+
+    <p>
+      The tagline I keep coming back to is this: <strong>"Unity Physics, but for Character Intelligence."</strong> Unity doesn't tell you what your character will do. It gives you physics rules — gravity, collision, momentum — and then lets behavior emerge from those rules. CogniCore is the same idea but for the social and emotional layer of a character. You define who they are. The system figures out what they'd do.
+    </p>
+
+    <p>
+      You set the rules. The story writes itself.
+    </p>
+
+    <h2>## the core ideas</h2>
+
+    <p>
+      There were a few things I knew had to exist for this to actually work.
+    </p>
+
+    <p>
+      The first was memory. Not the kind where a character remembers the last thing you said. Real memory — short-term stuff that fades, long-term memories that get retrieved when something relevant happens, social memories about specific people, and secrets that a character holds and only shares under specific conditions. All of it backed by SQLite and RAG so it actually retrieves the right memory at the right moment without needing a huge API call.
+    </p>
+
+    <p>
+      The second was emotions. And I wanted this to feel mechanical, not magical. Seven dimensions — anger, fear, suspicion, happiness, trust, guilt, confidence — all tracked as numbers. They change based on events, they decay over time, and they influence how a character decides to act. A character who's been lied to twice doesn't just have a flag that says "distrusts player". Their suspicion score is high, their trust score is low, and both of those feed directly into every decision they make.
+    </p>
+
+    <p>
+      The third was relationships. Every character in a simulation has a relationship with every other character — trust, respect, fear, friendship, rivalry, loyalty — tracked as a directed graph. If Character A trusts Character B and Character B betrays Character C, Character A's view of Character C might shift based purely on social dynamics. Without you scripting any of it.
+    </p>
+
+    <p>
+      And then there's rumors. This one was probably the most fun to build. When a character hears something and passes it on, the details mutate slightly based on their honesty trait. So a rumor that starts as "the blacksmith stole 10 gold" might end up as "the blacksmith stole a chest of gold" three characters later. It's emergent misinformation. The simulation lies to itself.
+    </p>
+
+    <h2>## the folder situation</h2>
+
+    <p>
+      The SDK structure ended up being pretty deep because each system needed its own space.
+    </p>
+
+    <pre><code>cognicore/
+├── agents/        # the autonomous runtime loops
+├── emotions/      # state transitions and decay
+├── goals/         # what characters want and why
+├── llm/           # adapters for Gemini, OpenAI, Ollama, Mock
+├── memory/        # short-term, long-term, social, secret
+├── personality/   # trait vectors
+├── planning/      # utility-based and LLM planners
+├── rag/           # SQLite vector indexing
+├── relationships/ # directed graph weights
+├── rumors/        # propagation and mutation logic
+├── secrets/       # exposure thresholds and trading
+├── social_graph/  # visualization
+└── simulation/    # multi-agent orchestrators</code></pre>
+
+    <p>
+      Every folder is a subsystem. Every subsystem talks to the others. And the whole thing can run locally with zero API keys — using rule-based planning and SQLite embeddings — which was a hard requirement for me. I didn't want this to be something that only worked if you had an OpenAI account loaded up.
+    </p>
+
+    <h2>## silent hollow</h2>
+
+    <p>
+      Building a framework in isolation is one thing. Actually proving it works is another. So I built a demo simulation called <strong>Silent Hollow</strong>.
+    </p>
+
+    <p>
+      It's a murder mystery. There's a village. There are characters with histories, secrets, and relationships. Someone commits a crime. The other characters witness things, form opinions, spread rumors, and start reacting — all without any scripting from me. The backend is FastAPI running the CogniCore multi-agent simulation, and the frontend is a Vite + React + Three.js isometric village with a real-time developer dashboard where you can watch what every character is thinking, feeling, and doing at any given tick.
+    </p>
+
+    <p>
+      The first time I actually ran a full simulation and watched two characters' relationship graphs diverge because of a rumor that had already mutated twice before reaching them — that was the moment where I thought okay, this actually works.
+    </p>
+
+    <h2>## the philosophy behind it</h2>
+
+    <p>
+      The thing I kept reminding myself while building this: emergent behavior only works if the rules are strict and consistent. If emotions decay randomly, the simulation feels chaotic. If memories are retrieved incorrectly, character behavior feels arbitrary. If relationships don't update on events, the whole social layer collapses.
+    </p>
+
+    <p>
+      So a lot of the work was making the boring parts airtight. The decay functions. The memory retrieval thresholds. The rumor mutation probabilities. None of that is visible to the person playing a game built on CogniCore. But all of it determines whether the story feels real or not.
+    </p>
+
+    <p>
+      Predictable rules. Unpredictable stories. That's the whole thing.
+    </p>
+
+    <h2>## who is this actually for</h2>
+
+    <p>
+      Indie game developers, mostly. People building RPGs or simulation games or interactive fiction who want their characters to actually feel alive without writing a thousand lines of conditional dialogue. But also researchers who want a testbed for social simulation. Also just anyone who's curious about what happens when you give a bunch of AI agents competing goals, hidden secrets, and the ability to gossip.
+    </p>
+
+    <p>
+      The plan is to get this on PyPI as a proper pip-installable SDK with abstract base classes for easy customization, YAML-based character configs, and GitHub Actions for automated releases. That work is in progress.
+    </p>
+
+    <h2>## what's next</h2>
+
+    <p>
+      There are a lot of open questions right now.
+    </p>
+
+    <p>
+      What happens when you scale the simulation to hundreds of agents and relationships? Does the social graph stay coherent or does it degrade into noise? What happens when characters can form factions — groups with shared goals and shared enemies? What does conflict resolution look like when multiple characters with competing loyalties all know the same secret?
+    </p>
+
+
+    <pre><code>cognicore/factions/</code></pre>
+
+    <p>
+      We'll see where this goes.
+    </p>
+
+    <p>
+      CogniCore is open source — <a href="https://github.com/Karthik-Unni/CogniCore" target="_blank">github.com/Karthik-Unni/CogniCore</a>
+    </p>
+  </main>
+
+  <footer>
+    <p><a href="https://karthik-unni.github.io/blog.html">← all posts</a> karthik unnikrishnan · 2026</p>
+  </footer>
+</body>
+</html>
