@@ -5,298 +5,633 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>karthik-unni.github.io</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+
+/* ─── THREEJS CANVAS ─────────────────────────── */
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── CONTENT LAYER ─────────────────────────── */
+nav, section, footer { position: relative; z-index: 2; }
+
+/* ─── CRT SCANLINE OVERLAY ──────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 4px
+  );
+}
+
+/* ─── TYPED CURSOR replaces the static one ─── */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+#typed-cursor {
+  display: inline-block;
+  width: 9px;
+  height: 1.1em;
+  background: #98c379;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 1.1s step-end infinite;
+}
+
+/* ─── SCROLL REVEAL ─────────────────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  transition-delay: var(--d,0s);
+}
+.rv.on { opacity: 1; transform: none; }
+
+/* ─── ENTRY: animated left-border glow ──────── */
+.entry {
+  position: relative;
+  transition: border-left-color 0.3s ease;
+}
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: #98c379;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.35s ease;
+}
+.entry.on::before { transform: scaleY(1); }
+
+/* ─── TAG: terminal invert on hover ─────────── */
+.tag {
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  cursor: default;
+}
+.tag:hover {
+  background: #98c379;
+  color: #0c0c0c;
+  border-color: #98c379;
+}
+
+/* ─── POST ITEM slide ────────────────────────── */
+.post-item { transition: padding-left 0.15s ease; }
+.post-item:hover { padding-left: 4px; }
+
+/* ─── GLITCH on ASCII art ────────────────────── */
+@keyframes glitch1 {
+  0%,90%,100% { clip-path: none; transform: none; }
+  92% { clip-path: inset(10% 0 80% 0); transform: translateX(-4px); }
+  94% { clip-path: inset(60% 0 20% 0); transform: translateX(4px); }
+  96% { clip-path: none; transform: none; }
+}
+@keyframes glitch2 {
+  0%,88%,100% { clip-path: none; transform: none; opacity: 1; }
+  90% { clip-path: inset(40% 0 50% 0); transform: translateX(3px); opacity: 0.8; }
+  93% { clip-path: inset(70% 0 10% 0); transform: translateX(-3px); }
+  95% { clip-path: none; transform: none; opacity: 1; }
+}
+.ascii-art {
+  position: relative;
+  display: inline-block;
+  animation: glitch1 8s infinite;
+}
+.ascii-art::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: #61afef;
+  animation: glitch2 8s infinite;
+  pointer-events: none;
+  white-space: pre;
+}
+
+/* ─── SECTION DIVIDER: running scan line ──── */
+.divider::after {
+  background: linear-gradient(90deg, #1e1e1e 0%, #98c37944 50%, #1e1e1e 100%);
+  background-size: 200% 100%;
+  animation: scan 3s linear infinite;
+}
+@keyframes scan { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ─── NAV prompt: no change but cursor after ─ */
+.prompt { position: relative; }
+
+  </style>
 </head>
 <body>
 
-  <nav>
-    <div class="prompt">whoami</div>
-    <div class="nav-line">
-      <span class="nav-host">karthik-unni@github.io</span>
-      <span>~</span>
-      <a href="#about">about</a>
-      <a href="#work">work</a>
-      <a href="blog.html">writing</a>
-      <a href="https://github.com/Karthik-Unni" target="_blank">github↗</a>
-      <a href="mailto:karthikunni2111@gmail.com">email↗</a>
-      <a href="https://www.linkedin.com/in/karthik-unnikrishnan-b40739334/">linkedin↗</a>
-    </div>
-  </nav>
+<canvas id="bg"></canvas>
 
-  <!-- ASCII ART + BIO -->
-  <section id="about">
-    <div class="prompt">cat about.txt</div>
-    <br />
+<!-- ── NAV ── -->
+<nav>
+  <div class="prompt">whoami</div>
+  <div class="nav-line">
+    <span class="nav-host">karthik-unni@github.io</span>
+    <span>~</span>
+    <a href="#about">about</a>
+    <a href="#work">work</a>
+    <a href="blog.html">writing</a>
+    <a href="https://github.com/Karthik-Unni" target="_blank">github↗</a>
+    <a href="mailto:karthikunni2111@gmail.com">email↗</a>
+    <a href="https://www.linkedin.com/in/karthik-unnikrishnan-b40739334/">linkedin↗</a>
+  </div>
+</nav>
 
-    <pre class="ascii-art">
-██╗  ██╗ █████╗ ██████╗ ████████╗██╗  ██╗██╗██╗  ██╗
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="prompt">cat about.txt</div>
+  <br />
+
+  <pre class="ascii-art" data-text="██╗  ██╗ █████╗ ██████╗ ████████╗██╗  ██╗██╗██╗  ██╗
 ██║ ██╔╝██╔══██╗██╔══██╗╚══██╔══╝██║  ██║██║██║ ██╔╝
 █████╔╝ ███████║██████╔╝   ██║   ███████║██║█████╔╝
 ██╔═██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║██╔═██╗
 ██║  ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║██║  ██╗
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝ 🔱
-    </pre>
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝ 🔱">██╗  ██╗ █████╗ ██████╗ ████████╗██╗  ██╗██╗██╗  ██╗
+██║ ██╔╝██╔══██╗██╔══██╗╚══██╔══╝██║  ██║██║██║ ██╔╝
+█████╔╝ ███████║██████╔╝   ██║   ███████║██║█████╔╝
+██╔═██╗ ██╔══██║██╔══██╗   ██║   ██╔══██║██║██╔═██╗
+██║  ██╗██║  ██║██║  ██║   ██║   ██║  ██║██║██║  ██╗
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝ 🔱</pre>
 
-    <br />
-    <h1>Hi, I'm <span class="name-hi">Karthik Unnikrishnan</span> <span class="cursor"></span></h1>
-    <br />
-    <p>
-      2nd year undergrad at <span class="hi">Amrita Vishwa Vidyapeetham</span>, Kerala.
-      I build AI systems, work on open-source infrastructure, and write about everything I learn.
-    </p>
-    <p>
-      Currently a mentee at <span class="hi">Magma</span> (Linux Foundation Networking) —
-      went from zero knowledge of mobile core networks to deploying a full
-      <span class="hi">4G/5G network stack</span>, fixing a real bug across 14 files,
-      and shipping a PR to a production codebase.
-    </p>
-    <p>
-      Outside of networking I build <span class="hi">AI agents</span>, full-stack platforms,
-      and multimodal systems. <span class="muted">Exploring agentic AI frameworks and ML research.</span>
-    </p>
-    <div class="tags">
-      <span class="tag">machine learning</span>
-      <span class="tag">agentic ai</span>
-      <span class="tag">linux / networking</span>
-      <span class="tag">python</span>
+  <br />
+  <h1>Hi, I'm <span class="name-hi" id="typed-name"></span><span id="typed-cursor"></span></h1>
+  <br />
+  <p class="rv" style="--d:.05s">
+    3rd year undergrad at <span class="hi">Amrita Vishwa Vidyapeetham</span>, Kerala.
+    I build AI systems, work on open-source infrastructure, and write about everything I learn.
+  </p>
+  <p class="rv" style="--d:.12s">
+    Currently a mentee at <span class="hi">Magma</span> (Linux Foundation Networking) —
+    went from zero knowledge of mobile core networks to deploying a full
+    <span class="hi">4G/5G network stack</span>, fixing a real bug across 14 files,
+    and shipping a PR to a production codebase.
+  </p>
+  <p class="rv" style="--d:.19s">
+    Outside of networking I build <span class="hi">AI agents</span>, full-stack platforms,
+    and multimodal systems. <span class="muted">Exploring agentic AI frameworks and ML research.</span>
+  </p>
+  <div class="tags rv" style="--d:.26s">
+    <span class="tag">machine learning</span>
+    <span class="tag">agentic ai</span>
+    <span class="tag">linux / networking</span>
+    <span class="tag">python</span>
+    <span class="tag">open source</span>
+    <span class="tag">building in public</span>
+  </div>
+</section>
+
+<!-- ── WORK ── -->
+<section id="work">
+  <div class="divider"><span class="divider-label">## work &amp; achievements</span></div>
+
+  <h2>mentorships</h2>
+
+  <div class="entry rv" style="--d:.04s">
+    <div class="entry-header">
+      <span class="entry-title">Open Source Mentee</span>
+      <span class="entry-date">Jan-May 2026</span>
+    </div>
+    <div class="entry-org">Magma — Linux Foundation Networking Project</div>
+    <div class="entry-desc">
+      Deployed a 4G/5G network stack from scratch. Audited <code>lte/gateway</code> Dockerfiles,
+      found and fixed broken Ubuntu 24.04 packages (<code>python3-distutils</code>, <code>libssl1.1</code>),
+      updated <code>subscriberdb</code> to Ubuntu 24.04, and upgraded CI to a matrix strategy
+      testing ubuntu-20.04 and ubuntu-24.04. Fixed a real bug spanning 14 files and submitted
+      a PR to the production codebase.
+    </div>
+    <div class="tags" style="margin-top:0.6rem">
+      <span class="tag">linux</span>
+      <span class="tag">docker</span>
       <span class="tag">open source</span>
-      <span class="tag">building in public</span>
+      <span class="tag">4g/5g</span>
+      <span class="tag">github actions</span>
     </div>
-  </section>
+  </div>
 
-  <!-- WORK -->
-  <section id="work">
-    <div class="divider"><span class="divider-label">## work &amp; achievements</span></div>
-
-    <h2>mentorships</h2>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Open Source Mentee</span>
-        <span class="entry-date">Jan-May 2026</span>
-      </div>
-      <div class="entry-org">Magma — Linux Foundation Networking Project</div>
-      <div class="entry-desc">
-        Deployed a 4G/5G network stack from scratch. Audited <code>lte/gateway</code> Dockerfiles,
-        found and fixed broken Ubuntu 24.04 packages (<code>python3-distutils</code>, <code>libssl1.1</code>),
-        updated <code>subscriberdb</code> to Ubuntu 24.04, and upgraded CI to a matrix strategy
-        testing ubuntu-20.04 and ubuntu-24.04. Fixed a real bug spanning 14 files and submitted
-        a PR to the production codebase.
-      </div>
-      <div class="tags" style="margin-top:0.6rem">
-        <span class="tag">linux</span>
-        <span class="tag">docker</span>
-        <span class="tag">open source</span>
-        <span class="tag">4g/5g</span>
-        <span class="tag">github actions</span>
-      </div>
+  <div class="entry rv" style="--d:.09s">
+    <div class="entry-header">
+      <span class="entry-title">Apprentice and Intern</span>
+      <span class="entry-date">2026 Present</span>
     </div>
-
-<div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Apprentice and Intern</span>
-        <span class="entry-date">2026 Present</span>
-      </div>
-      <div class="entry-org">Cisai-Centre for Internet Studies and Artificial Intelligence</div>
-      <div class="entry-desc">
-       Built experimental AI prototypes while researching agentic AI architectures and operating system 
-       concepts for intelligent system design.Building more...
-      </div>
-      <div class="entry-header">
-        <span class="entry-title">AI Engineer Intern</span>
-        <span class="entry-date">June 2026-Present</span>
-      </div>
-      <div class="entry-org">Ouantum AI</div>
-      <div class="entry-desc">
+    <div class="entry-org">Cisai-Centre for Internet Studies and Artificial Intelligence</div>
+    <div class="entry-desc">
+      Built experimental AI prototypes while researching agentic AI architectures and operating system
+      concepts for intelligent system design. Building more...
+    </div>
+    <div class="entry-header" style="margin-top:1rem">
+      <span class="entry-title">AI Engineer Intern</span>
+      <span class="entry-date">June 2026-Present</span>
+    </div>
+    <div class="entry-org">Ouantum AI</div>
+    <div class="entry-desc">
       Worked on developing AI systems for construction quality analysis, building defect detection modules such as honeycombs
       that identified structural anomalies from Ultrasonic Pulse Velocity (UPV) sensor data. Contributed to data
-      processing pipelines,pattern recognition algorithms, and AI-driven assessment workflows for engineering applications
-      </div>
-
-
-  
-    <h2 style="margin-top:2rem">projects</h2>
-
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">LOOM-GPT — Local Transformer Laboratory</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        Built a GPT-style transformer framework from scratch in PyTorch featuring specialist model training,
-        weighted model weaving, validation tracking, influence tracing, and controllable generation through
-        the composition of multiple domain-specific language models.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">pytorch</span><span class="tag">transformers</span><span class="tag">generative ai</span><span class="tag">open source</span><span class="tag">ml research</span>
-      </div>
+      processing pipelines, pattern recognition algorithms, and AI-driven assessment workflows for engineering applications.
     </div>
+  </div>
 
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Orbita — AI Supply Chain Platform</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        AI-powered platform for automated communication between retailers and suppliers using agent-based workflows.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">fastapi</span><span class="tag">react</span><span class="tag">ai agents</span><span class="tag">python</span>
-      </div>
+  <h2 style="margin-top:2rem">projects</h2>
+
+  <div class="entry rv" style="--d:.04s">
+    <div class="entry-header">
+      <span class="entry-title">LOOM-GPT — Local Transformer Laboratory</span>
+      <span class="entry-date">2026</span>
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">CIVIA — Civic Intelligent Virtual AI Assistant</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        Fully automated civic and legal service kiosk using LangChain and RAG-based vector search
-        to streamline access to government services through AI agents.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">langchain</span><span class="tag">rag</span><span class="tag">vector search</span><span class="tag">ai agents</span>
-      </div>
+    <div class="entry-desc">
+      Built a GPT-style transformer framework from scratch in PyTorch featuring specialist model training,
+      weighted model weaving, validation tracking, influence tracing, and controllable generation through
+      the composition of multiple domain-specific language models.
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Morphik-LMM — Offline Multimodal AI</span>
-        <span class="entry-date">2025</span>
-      </div>
-      <div class="entry-desc">
-        Offline multimodal AI system for text Q&amp;A and image-to-text with modular pipelines,
-        optimised prompts, sub-3s responses, containerised on Docker and Kubernetes.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">ollama</span><span class="tag">multimodal llms</span><span class="tag">docker</span><span class="tag">kubernetes</span>
-      </div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">pytorch</span><span class="tag">transformers</span><span class="tag">generative ai</span><span class="tag">open source</span><span class="tag">ml research</span>
     </div>
+  </div>
 
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">NYAYA-Setu — AI Legal Assistance</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        Scalable AI legal platform using LLM-powered agents to simplify access to legal information and guidance.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">fastapi</span><span class="tag">llms</span><span class="tag">ai agents</span>
-      </div>
+  <div class="entry rv" style="--d:.09s">
+    <div class="entry-header">
+      <span class="entry-title">Orbita — AI Supply Chain Platform</span>
+      <span class="entry-date">2026</span>
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Gesture-Controlled Infotainment System</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        Low-latency infotainment interface using FastAPI and Computer Vision for touchless gesture-based control on embedded hardware.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">opencv</span><span class="tag">computer vision</span><span class="tag">fastapi</span><span class="tag">embedded</span>
-      </div>
+    <div class="entry-desc">
+      AI-powered platform for automated communication between retailers and suppliers using agent-based workflows.
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">AbleLearn — AI Accessibility Platform</span>
-        <span class="entry-date">2025</span>
-      </div>
-      <div class="entry-desc">
-        Inclusive educational platform for children with disabilities, with AI-powered accessibility features and adaptive learning modules.
-      </div>
-      <div class="tags" style="margin-top:0.5rem">
-        <span class="tag">python</span><span class="tag">speech-to-text</span><span class="tag">nlp</span>
-      </div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">fastapi</span><span class="tag">react</span><span class="tag">ai agents</span><span class="tag">python</span>
     </div>
+  </div>
 
-    <h2 style="margin-top:2rem">achievements &amp; awards</h2>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">🏆 Innovate 2.0 Hackathon — Winner</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-org">SCT College of Engineering, Thiruvananthapuram</div>
+  <div class="entry rv" style="--d:.14s">
+    <div class="entry-header">
+      <span class="entry-title">CIVIA — Civic Intelligent Virtual AI Assistant</span>
+      <span class="entry-date">2026</span>
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">🥈 InApp Epochon 2.0 — Runner Up</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-org">ACM — Amrita Vishwa Vidyapeetham, Amritapuri</div>
+    <div class="entry-desc">
+      Fully automated civic and legal service kiosk using LangChain and RAG-based vector search
+      to streamline access to government services through AI agents.
     </div>
-
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">🏆 Codex 26' Hackathon — Winner</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-org">TKM Institute of Technology</div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">langchain</span><span class="tag">rag</span><span class="tag">vector search</span><span class="tag">ai agents</span>
     </div>
+  </div>
 
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-title">Magma Open Source Mentee</span>
-        <span class="entry-date">2026</span>
-      </div>
-      <div class="entry-desc">
-        Selected as mentee for the Linux Foundation Networking Magma project.
-        Shipped a real PR to a production open-source codebase within weeks of joining.
-      </div>
+  <div class="entry rv" style="--d:.19s">
+    <div class="entry-header">
+      <span class="entry-title">Morphik-LMM — Offline Multimodal AI</span>
+      <span class="entry-date">2025</span>
     </div>
-
-    <h2 style="margin-top:2rem">stack</h2>
-    <div class="tags">
-      <span class="tag">python</span>
-      <span class="tag">fastapi</span>
-      <span class="tag">django</span>
-      <span class="tag">flask</span>
-      <span class="tag">react</span>
-      <span class="tag">flutter</span>
-      <span class="tag">langchain</span>
-      <span class="tag">docker</span>
-      <span class="tag">kubernetes</span>
-      <span class="tag">linux / unix</span>
-      <span class="tag">git</span>
-      <span class="tag">rest apis</span>
+    <div class="entry-desc">
+      Offline multimodal AI system for text Q&amp;A and image-to-text with modular pipelines,
+      optimised prompts, sub-3s responses, containerised on Docker and Kubernetes.
     </div>
-  </section>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">ollama</span><span class="tag">multimodal llms</span><span class="tag">docker</span><span class="tag">kubernetes</span>
+    </div>
+  </div>
 
-  <!-- LATEST WRITING (preview) -->
-  <section id="blog">
-    <div class="divider"><span class="divider-label">## writing</span></div>
-    <p style="color:var(--dim); font-size:12.5px; margin-bottom:1.2rem">
-      Notes on mentorships, papers I've read, projects I've built.
-      — <a href="blog.html">all posts →</a>
-    </p>
+  <div class="entry rv" style="--d:.24s">
+    <div class="entry-header">
+      <span class="entry-title">NYAYA-Setu — AI Legal Assistance</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-desc">
+      Scalable AI legal platform using LLM-powered agents to simplify access to legal information and guidance.
+    </div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">fastapi</span><span class="tag">llms</span><span class="tag">ai agents</span>
+    </div>
+  </div>
 
-    <ul class="post-list">
-      <!-- keep only your latest 3 posts here. Full list lives on blog.html -->
-      <li class="post-item"><a href="posts/magma-experience.html" class="post-link">From zero to 5G — my Magma mentorship experience</a><div class="post-meta"><span class="post-cat cat-mentorship">mentorship</span><span>Jan 2026</span></div></li>
-      <li class="post-item">
-        <a href="posts/log1.html" class="post-link">Understanding Transformers — Engineering Log #1</a>
-        <div class="post-meta">
-          <span class="post-cat cat-log">log</span>
-          <span>23-04-2026</span>
-        </div>
-      </li>
-    </ul>
+  <div class="entry rv" style="--d:.29s">
+    <div class="entry-header">
+      <span class="entry-title">Gesture-Controlled Infotainment System</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-desc">
+      Low-latency infotainment interface using FastAPI and Computer Vision for touchless gesture-based control on embedded hardware.
+    </div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">opencv</span><span class="tag">computer vision</span><span class="tag">fastapi</span><span class="tag">embedded</span>
+    </div>
+  </div>
 
-    <p style="margin-top:1.2rem">
-      <a href="blog.html" class="btn-text">→ see all writing</a>
-    </p>
-  </section>
+  <div class="entry rv" style="--d:.34s">
+    <div class="entry-header">
+      <span class="entry-title">AbleLearn — AI Accessibility Platform</span>
+      <span class="entry-date">2025</span>
+    </div>
+    <div class="entry-desc">
+      Inclusive educational platform for children with disabilities, with AI-powered accessibility features and adaptive learning modules.
+    </div>
+    <div class="tags" style="margin-top:0.5rem">
+      <span class="tag">python</span><span class="tag">speech-to-text</span><span class="tag">nlp</span>
+    </div>
+  </div>
 
-  <footer>
-    karthik unnikrishnan ·
-    <a href="https://github.com/Karthik-Unni" target="_blank">github</a> ·
-    <a href="mailto:karthikunni2111@gmail.com">email</a> ·
-    built with plain html
-  </footer>
+  <h2 style="margin-top:2rem">achievements &amp; awards</h2>
+
+  <div class="entry rv" style="--d:.04s">
+    <div class="entry-header">
+      <span class="entry-title">🏆 Innovate 2.0 Hackathon — Winner</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-org">SCT College of Engineering, Thiruvananthapuram</div>
+  </div>
+
+  <div class="entry rv" style="--d:.09s">
+    <div class="entry-header">
+      <span class="entry-title">🥈 InApp Epochon 2.0 — Runner Up</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-org">ACM — Amrita Vishwa Vidyapeetham, Amritapuri</div>
+  </div>
+
+  <div class="entry rv" style="--d:.14s">
+    <div class="entry-header">
+      <span class="entry-title">🏆 Codex 26' Hackathon — Winner</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-org">TKM Institute of Technology</div>
+  </div>
+
+  <div class="entry rv" style="--d:.19s">
+    <div class="entry-header">
+      <span class="entry-title">Magma Open Source Mentee</span>
+      <span class="entry-date">2026</span>
+    </div>
+    <div class="entry-desc">
+      Selected as mentee for the Linux Foundation Networking Magma project.
+      Shipped a real PR to a production open-source codebase within weeks of joining.
+    </div>
+  </div>
+
+  <h2 style="margin-top:2rem">stack</h2>
+  <div class="tags rv" style="--d:.06s">
+    <span class="tag">python</span>
+    <span class="tag">fastapi</span>
+    <span class="tag">django</span>
+    <span class="tag">flask</span>
+    <span class="tag">react</span>
+    <span class="tag">flutter</span>
+    <span class="tag">langchain</span>
+    <span class="tag">docker</span>
+    <span class="tag">kubernetes</span>
+    <span class="tag">linux / unix</span>
+    <span class="tag">git</span>
+    <span class="tag">rest apis</span>
+  </div>
+</section>
+
+<!-- ── WRITING ── -->
+<section id="blog">
+  <div class="divider"><span class="divider-label">## writing</span></div>
+  <p style="color:var(--dim); font-size:12.5px; margin-bottom:1.2rem">
+    Notes on mentorships, papers I've read, projects I've built.
+    — <a href="blog.html">all posts →</a>
+  </p>
+  <ul class="post-list">
+    <li class="post-item">
+      <a href="posts/magma-experience.html" class="post-link">From zero to 5G — my Magma mentorship experience</a>
+      <div class="post-meta"><span class="post-cat cat-mentorship">mentorship</span><span>Jan 2026</span></div>
+    </li>
+    <li class="post-item">
+      <a href="posts/log1.html" class="post-link">Understanding Transformers — Engineering Log #1</a>
+      <div class="post-meta"><span class="post-cat cat-log">log</span><span>23-04-2026</span></div>
+    </li>
+  </ul>
+  <p style="margin-top:1.2rem">
+    <a href="blog.html" class="btn-text">→ see all writing</a>
+  </p>
+</section>
+
+<footer>
+  karthik unnikrishnan ·
+  <a href="https://github.com/Karthik-Unni" target="_blank">github</a> ·
+  <a href="mailto:karthikunni2111@gmail.com">email</a> ·
+  built with plain html
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     THREE.JS — floating 3D code glyphs + connection graph
+     Concept: ASCII/code characters drift in 3D space,
+     connected by dim lines when close. Hub nodes pulse.
+     Color palette matches site: green #98c379, amber #e5c07b,
+     blue #61afef on near-black #0c0c0c bg.
+═══════════════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  const C = document.getElementById('bg');
+  const W = () => window.innerWidth;
+  const H = () => window.innerHeight;
+
+  const renderer = new THREE.WebGLRenderer({ canvas: C, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setSize(W(), H());
+
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(55, W()/H(), 0.1, 300);
+  cam.position.set(0, 0, 60);
+
+  /* ── palette ── */
+  const GREEN = new THREE.Color('#98c379');
+  const AMBER = new THREE.Color('#e5c07b');
+  const BLUE  = new THREE.Color('#61afef');
+  const DIM   = new THREE.Color('#2a2a2a');
+
+  /* ── NODE SETUP ──────────────────────────────────────
+     3 types:
+     • HUB   (4)  — bigger sphere, green, slow pulse
+     • MID   (14) — small sphere, amber
+     • LEAF  (30) — tiny sphere, dim blue/grey
+  ───────────────────────────────────────────────────── */
+  const N_HUB = 4, N_MID = 14, N_LEAF = 30;
+  const N = N_HUB + N_MID + N_LEAF;
+  const SX = 46, SY = 34, SZ = 18;
+
+  const nodes = [];      /* {mesh, pos, vel, type, phase} */
+
+  function mkNode(r, color, type) {
+    const geo = new THREE.SphereGeometry(r, 10, 10);
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: type === 'hub' ? 0.9 : type === 'mid' ? 0.6 : 0.35 });
+    const mesh = new THREE.Mesh(geo, mat);
+    return { mesh, mat, type };
+  }
+
+  /* hubs */
+  for (let i = 0; i < N_HUB; i++) {
+    const n = mkNode(0.55, GREEN, 'hub');
+    n.phase = Math.random() * Math.PI * 2;
+    n.pos = new THREE.Vector3((Math.random()-.5)*SX*1.4, (Math.random()-.5)*SY*1.4, (Math.random()-.5)*SZ);
+    n.vel = new THREE.Vector3((Math.random()-.5)*0.012, (Math.random()-.5)*0.009, (Math.random()-.5)*0.003);
+    n.mesh.position.copy(n.pos);
+    nodes.push(n);
+    scene.add(n.mesh);
+  }
+  /* mid */
+  for (let i = 0; i < N_MID; i++) {
+    const n = mkNode(0.28, AMBER, 'mid');
+    n.phase = Math.random() * Math.PI * 2;
+    n.pos = new THREE.Vector3((Math.random()-.5)*SX*1.6, (Math.random()-.5)*SY*1.6, (Math.random()-.5)*SZ);
+    n.vel = new THREE.Vector3((Math.random()-.5)*0.009, (Math.random()-.5)*0.007, (Math.random()-.5)*0.002);
+    n.mesh.position.copy(n.pos);
+    nodes.push(n);
+    scene.add(n.mesh);
+  }
+  /* leaf */
+  for (let i = 0; i < N_LEAF; i++) {
+    const n = mkNode(0.13, BLUE, 'leaf');
+    n.phase = Math.random() * Math.PI * 2;
+    n.pos = new THREE.Vector3((Math.random()-.5)*SX*1.8, (Math.random()-.5)*SY*1.8, (Math.random()-.5)*SZ);
+    n.vel = new THREE.Vector3((Math.random()-.5)*0.006, (Math.random()-.5)*0.005, 0);
+    n.mesh.position.copy(n.pos);
+    nodes.push(n);
+    scene.add(n.mesh);
+  }
+
+  /* ── EDGES ─────────────────────────────────────────── */
+  const LINK_DIST = { hub: 30, mid: 18, leaf: 10 };
+  const MAX_E = N * N;
+  const eVerts = new Float32Array(MAX_E * 6);
+  const eGeo = new THREE.BufferGeometry();
+  eGeo.setAttribute('position', new THREE.BufferAttribute(eVerts, 3));
+  /* 3 edge materials, one per colour combo — use mid opacity */
+  const eMat = new THREE.LineBasicMaterial({ color: GREEN, transparent: true, opacity: 0.10 });
+  const eLines = new THREE.LineSegments(eGeo, eMat);
+  scene.add(eLines);
+
+  /* ── RING around hub nodes ──────────────────────────── */
+  nodes.slice(0, N_HUB).forEach(n => {
+    const rGeo = new THREE.RingGeometry(0.75, 0.82, 32);
+    const rMat = new THREE.MeshBasicMaterial({ color: GREEN, transparent: true, opacity: 0.18, side: THREE.DoubleSide });
+    const ring = new THREE.Mesh(rGeo, rMat);
+    ring.rotation.x = Math.PI / 2;
+    n.mesh.add(ring);
+    n.ring = ring;
+  });
+
+  /* ── SCROLL PARALLAX ─────────────────────────────── */
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+  /* ── RESIZE ──────────────────────────────────────── */
+  window.addEventListener('resize', () => {
+    renderer.setSize(W(), H());
+    cam.aspect = W()/H();
+    cam.updateProjectionMatrix();
+  });
+
+  /* ── MOUSE subtle attraction ─────────────────────── */
+  const mouse = new THREE.Vector2(0, 0);
+  window.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX / W() - 0.5) * 2;
+    mouse.y = -(e.clientY / H() - 0.5) * 2;
+  });
+
+  /* ── ANIMATE ─────────────────────────────────────── */
+  const tmp = new THREE.Vector3();
+  let t = 0;
+  function tick() {
+    requestAnimationFrame(tick);
+    t += 0.016;
+
+    /* drift + wrap nodes */
+    nodes.forEach((n, i) => {
+      n.pos.addScaledVector(n.vel, 1);
+      const bx = SX * (n.type==='leaf'?1.8:n.type==='mid'?1.6:1.4);
+      const by = SY * (n.type==='leaf'?1.8:n.type==='mid'?1.6:1.4);
+      if (n.pos.x >  bx) n.pos.x = -bx;
+      if (n.pos.x < -bx) n.pos.x =  bx;
+      if (n.pos.y >  by) n.pos.y = -by;
+      if (n.pos.y < -by) n.pos.y =  by;
+      n.mesh.position.copy(n.pos);
+
+      /* hub: size pulse + ring rotation */
+      if (n.type === 'hub') {
+        const s = 1 + 0.18 * Math.sin(t * 1.2 + n.phase);
+        n.mesh.scale.setScalar(s);
+        if (n.ring) n.ring.rotation.z += 0.008;
+      }
+      /* mid: gentle float */
+      if (n.type === 'mid') {
+        n.mesh.position.y += 0.04 * Math.sin(t * 0.7 + n.phase);
+      }
+    });
+
+    /* rebuild edges */
+    let ei = 0;
+    for (let i = 0; i < N; i++) {
+      for (let j = i+1; j < N; j++) {
+        const ni = nodes[i], nj = nodes[j];
+        const dist = LINK_DIST[ni.type === 'hub' || nj.type === 'hub' ? 'hub' :
+                               ni.type === 'mid' || nj.type === 'mid' ? 'mid' : 'leaf'];
+        tmp.subVectors(ni.pos, nj.pos);
+        if (tmp.length() < dist) {
+          eVerts[ei++]=ni.pos.x; eVerts[ei++]=ni.pos.y; eVerts[ei++]=ni.pos.z;
+          eVerts[ei++]=nj.pos.x; eVerts[ei++]=nj.pos.y; eVerts[ei++]=nj.pos.z;
+        }
+      }
+    }
+    for (let k=ei; k<eVerts.length; k++) eVerts[k]=0;
+    eGeo.attributes.position.needsUpdate = true;
+    eGeo.setDrawRange(0, ei/3);
+
+    /* camera: parallax + subtle mouse lean */
+    cam.position.y = -(scrollY * 0.008);
+    cam.position.x += (mouse.x * 2 - cam.position.x) * 0.02;
+    cam.lookAt(0, cam.position.y, 0);
+
+    renderer.render(scene, cam);
+  }
+  tick();
+})();
+</script>
+
+<!-- ── TYPED NAME ── -->
+<script>
+(function () {
+  const el = document.getElementById('typed-name');
+  const cur = document.getElementById('typed-cursor');
+  const txt = 'Karthik Unnikrishnan';
+  let i = 0;
+  function type() {
+    if (i < txt.length) {
+      el.textContent += txt[i++];
+      setTimeout(type, 46 + Math.random() * 24);
+    } else {
+      setTimeout(() => { if(cur) cur.style.display='none'; }, 2200);
+    }
+  }
+  setTimeout(type, 350);
+})();
+</script>
+
+<!-- ── SCROLL REVEAL + ENTRY BORDER ANIMATION ── -->
+<script>
+(function () {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('on');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -10px 0px' });
+
+  document.querySelectorAll('.rv, .entry').forEach(el => io.observe(el));
+})();
+</script>
 
 </body>
 </html>
